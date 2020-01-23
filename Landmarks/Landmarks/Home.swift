@@ -9,10 +9,24 @@
 import SwiftUI
 
 struct CategoryHome: View {
+    // ランドマークの辞書配列を用意する
+    // 立地カテゴリ名をkey、同key項目でグルーピングした立地リストをvalueとして初期化する
+    var categories: [String: [Landmark]] {
+        Dictionary(
+            grouping: landmarkData, // グルーピング対象データを指定
+            by: { $0.category.rawValue } // キーに用いる項目を指定
+        )
+    }
+    
     var body: some View {
+        // 画面遷移対応ビューとして、立地カテゴリのリストを表示する
         NavigationView {
-            Text("Landmarks Content")
-                .navigationBarTitle(Text("Featured"))
+            List {
+                ForEach(categories.keys.sorted(), id: \.self) { key in
+                    Text(key)
+                }
+            }
+            .navigationBarTitle(Text("Featured"))
         }
     }
 }
