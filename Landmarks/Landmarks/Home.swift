@@ -22,6 +22,17 @@ struct CategoryHome: View {
         landmarkData.filter { $0.isFeatured }
     }
     
+    @State var showingProfile = false
+    
+    var profileButtton: some View {
+        Button(action: { self.showingProfile.toggle() }) {
+            Image(systemName: "person.crop.circle")
+                .imageScale(.large)
+                .accessibility(label: Text("User Profile"))
+                .padding()
+        }
+    }
+    
     var body: some View {
         // 画面遷移対応ビューとして、立地カテゴリのリストを表示する
         NavigationView {
@@ -36,8 +47,19 @@ struct CategoryHome: View {
                     CategoryRow(categoryName: key, items: self.categories[key]!)
                 }
                 .listRowInsets(EdgeInsets())
+                
+                NavigationLink(
+                    destination: LandmarkList()
+                        .environmentObject(UserData())
+                ) {
+                    Text("See All")
+                }
             }
             .navigationBarTitle(Text("Featured"))
+            .navigationBarItems(trailing: profileButtton)
+            .sheet(isPresented: $showingProfile) {
+                Text("User Profile")
+            }
         }
     }
 }
